@@ -1,10 +1,10 @@
 import AES from './ecb-core.js'
-import { coerceArray, copyArray, convertToInt32, createArray } from './utils';
-import { Si, T5, T6, T7, T8 } from './constants';
+import { coerceArray, copyArray, convertToInt32, createArray } from './utils.js';
+import { Si, T5, T6, T7, T8 } from './constants.js';
 
 function Decryptor(key) {
-  this._aes = new AES(key);
   defineDecrypt();
+  this._aes = new AES(key);
 }
 
 function defineDecrypt() {

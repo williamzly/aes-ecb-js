@@ -4,7 +4,7 @@
   "description": "cropped from ase-js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-json-modules test.mjs"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
     "small",
     "modular"
   ],
+  "type": "module",
   "author": "William Chou",
   "license": "ISC",
   "bugs": {

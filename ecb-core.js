@@ -1,5 +1,5 @@
-import { coerceArray, convertToInt32 } from './utils';
-import { numberOfRounds, rcon, S, U1, U2, U3, U4 } from './constants';
+import { coerceArray, convertToInt32 } from './utils.js';
+import { numberOfRounds, rcon, S, U1, U2, U3, U4 } from './constants.js';
 
 const AES = function(key) {
     if (!(this instanceof AES)) {
