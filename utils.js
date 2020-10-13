@@ -124,32 +124,62 @@ var convertUtf8 = (function() {
         }
     })();
 
-    var convertHex = (function() {
-        function toBytes(text) {
+var convertHex = (function() {
+    function toBytes(text) {
+        var result = [];
+        for (var i = 0; i < text.length; i += 2) {
+            result.push(parseInt(text.substr(i, 2), 16));
+        }
+
+        return result;
+    }
+
+    // http://ixti.net/development/javascript/2011/11/11/base64-encodedecode-of-utf8-in-browser-with-js.html
+    var Hex = '0123456789abcdef';
+
+    function fromBytes(bytes) {
             var result = [];
-            for (var i = 0; i < text.length; i += 2) {
-                result.push(parseInt(text.substr(i, 2), 16));
+            for (var i = 0; i < bytes.length; i++) {
+                var v = bytes[i];
+                result.push(Hex[(v & 0xf0) >> 4] + Hex[v & 0x0f]);
             }
+            return result.join('');
+    }
 
-            return result;
+    return {
+        toBytes: toBytes,
+        fromBytes: fromBytes,
+    }
+})();
+
+function pkcs7pad(data) {
+    data = coerceArray(data, true);
+    var padder = 16 - (data.length % 16);
+    var result = createArray(data.length + padder);
+    copyArray(data, result);
+    for (var i = data.length; i < result.length; i++) {
+        result[i] = padder;
+    }
+    return result;
+}
+
+function pkcs7strip(data) {
+    data = coerceArray(data, true);
+    if (data.length < 16) { throw new Error('PKCS#7 invalid length'); }
+
+    var padder = data[data.length - 1];
+    if (padder > 16) { throw new Error('PKCS#7 padding byte out of range'); }
+
+    var length = data.length - padder;
+    for (var i = 0; i < padder; i++) {
+        if (data[length + i] !== padder) {
+            throw new Error('PKCS#7 invalid padding byte');
         }
+    }
 
-        // http://ixti.net/development/javascript/2011/11/11/base64-encodedecode-of-utf8-in-browser-with-js.html
-        var Hex = '0123456789abcdef';
+    var result = createArray(length);
+    copyArray(data, result, 0, 0, length);
+    return result;
+}
 
-        function fromBytes(bytes) {
-                var result = [];
-                for (var i = 0; i < bytes.length; i++) {
-                    var v = bytes[i];
-                    result.push(Hex[(v & 0xf0) >> 4] + Hex[v & 0x0f]);
-                }
-                return result.join('');
-        }
-
-        return {
-            toBytes: toBytes,
-            fromBytes: fromBytes,
-        }
-    })();
-
-export { checkInt, checkInts, coerceArray, createArray, copyArray, convertToInt32, convertUtf8, convertHex };
+export { checkInt, checkInts, coerceArray, createArray, copyArray, convertToInt32, convertUtf8, convertHex, pkcs7pad, pkcs7strip };
