@@ -1,7 +1,7 @@
 AES-ECB-JS
 ======
 
-[![npm version](https://www.npmjs.com/package/aes-ecb-js)
+(https://www.npmjs.com/package/aes-ecb-js)
 
 A pure JavaScript implementation of the AES block cipher algorithm and ECB operation.
 Refrence to https://github.com/ricmoo/aes-js
